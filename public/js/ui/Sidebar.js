@@ -17,8 +17,12 @@ class Sidebar {
    * переключает два класса для body: sidebar-open и sidebar-collapse
    * при нажатии на кнопку .sidebar-toggle
    * */
-  static initToggleButton() {
-
+    static initToggleButton() {
+        const toggleButton = document.getElementsByClassName('sidebar-toggle')[0];
+        const bodyMenu = document.getElementsByClassName('sidebar-mini')[0];
+        toggleButton.onclick() = () => {
+            bodyMenu.classList.toggle('sidebar-open sidebar-collapse');
+        };
   }
 
   /**
@@ -28,7 +32,12 @@ class Sidebar {
    * При нажатии на кнопку выхода вызывает User.logout и по успешному
    * выходу устанавливает App.setState( 'init' )
    * */
-  static initAuthLinks() {
-
+    static initAuthLinks() {
+      const reg = document.getElementsByClassName('menu-item_register')[0];
+      const login = document.getElementsByClassName('menu-item_login')[0];
+      const logout = document.getElementsByClassName('menu-item_logout')[0];
+      register.addEventListener('click', () => App.getModal('register').open());
+      login.addEventListener('click', () => App.getModal('login').open());
+      logout.addEventListener('click', () => User.logout());
   }
 }

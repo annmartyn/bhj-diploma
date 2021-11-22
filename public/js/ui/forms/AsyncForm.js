@@ -13,7 +13,11 @@ class AsyncForm {
    * через registerEvents()
    * */
   constructor(element) {
-
+      if (!element) {
+          throw new Error('Element not found');
+      }
+      this.element = element;
+      this.registerEvents();
   }
 
   /**
@@ -21,7 +25,10 @@ class AsyncForm {
    * вызывает метод submit()
    * */
   registerEvents() {
-
+      this.element.onsubmit = (e) => {
+          e.preventDefault();
+          this.submit();
+      }
   }
 
   /**
@@ -31,8 +38,9 @@ class AsyncForm {
    *  'название поля формы 2': 'значение поля формы 2'
    * }
    * */
-  getData() {
-
+    getData() {
+        const formData = new FormData(this.element);
+        return formData;
   }
 
   onSubmit(options){
@@ -44,6 +52,6 @@ class AsyncForm {
    * данные, полученные из метода getData()
    * */
   submit() {
-
+      this.onSubmit(this.getData());
   }
 }
