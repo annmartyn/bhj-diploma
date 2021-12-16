@@ -1,3 +1,5 @@
+//const { response } = require("express");
+
 /**
  * Класс Sidebar отвечает за работу боковой колонки:
  * кнопки скрытия/показа колонки в мобильной версии сайта
@@ -20,7 +22,7 @@ class Sidebar {
     static initToggleButton() {
         const toggleButton = document.getElementsByClassName('sidebar-toggle')[0];
         const bodyMenu = document.getElementsByClassName('sidebar-mini')[0];
-        toggleButton.onclick() = () => {
+        toggleButton.onclick = () => {
             bodyMenu.classList.toggle('sidebar-open sidebar-collapse');
         };
   }
@@ -36,8 +38,14 @@ class Sidebar {
       const reg = document.getElementsByClassName('menu-item_register')[0];
       const login = document.getElementsByClassName('menu-item_login')[0];
       const logout = document.getElementsByClassName('menu-item_logout')[0];
-      register.addEventListener('click', () => App.getModal('register').open());
+      reg.addEventListener('click', () => App.getModal('register').open());
       login.addEventListener('click', () => App.getModal('login').open());
-      logout.addEventListener('click', () => User.logout());
-  }
+      logout.addEventListener('click', () => User.logout((e, response) => {
+        if (e) {
+          alert(e);
+        } else {
+          App.setState('init');
+        }
+      }))
+  };
 }

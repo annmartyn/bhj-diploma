@@ -16,7 +16,7 @@ class Modal {
           throw new Error('No element!');
       }
       this.element = element;
-      this.element.registerEvents();
+      this.element.registerEvents;
   }
 
   /**
@@ -25,7 +25,7 @@ class Modal {
    * (с помощью метода Modal.onClose)
    * */
   registerEvents() {
-      this.diss = this.element.querySelectorAll('data-dismiss=modal');
+      this.diss = this.element.querySelectorAll('[data-dismiss="modal"]');
       this.diss.onclick() = () => {
           this.element.onClose();
       }
@@ -38,7 +38,6 @@ class Modal {
   onClose(e) {
       try {
           this.close();
-          this.unregisterEvents();
       } catch (e) {
           throw e;
       }

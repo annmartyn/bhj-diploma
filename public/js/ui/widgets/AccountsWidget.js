@@ -3,6 +3,8 @@
  * отображения счетов в боковой колонке
  * */
 
+//const { application } = require("express");
+
 class AccountsWidget {
   /**
    * Устанавливает текущий элемент в свойство element
@@ -14,6 +16,13 @@ class AccountsWidget {
    * необходимо выкинуть ошибку.
    * */
   constructor( element ) {
+    if (!element) {
+      throw new Error('No element!');
+    } else {
+      this.element = element;
+      this.registerEvents;
+      this.update();
+    }
 
   }
 
@@ -25,7 +34,17 @@ class AccountsWidget {
    * вызывает AccountsWidget.onSelectAccount()
    * */
   registerEvents() {
+    let createAcc = document.querySelector('.create-account');
+    let accounts = document.querySelectorAll('.account');
+    createAcc.onclick() = () => {
+      App.getModal('#modal-new-account');
+    }
 
+    for (let i=0; i < accounts.length; i++) {
+      accounts[i].onclick = () => {
+        this.onSelectAccount(accounts[i]);
+      }
+    }
   }
 
   /**
@@ -39,7 +58,17 @@ class AccountsWidget {
    * метода renderItem()
    * */
   update() {
-
+    let currentUser = User.current();
+		if (currentUser) {
+			Account.list(currentUser, (err, response) => {
+				if (response && response.success) {
+					this.clear();
+					for (let i = 0; i < response.data.length; i++) {
+            this.renderItem(response.data[i]);
+          }
+				} 
+			});
+		}
   }
 
   /**
@@ -48,7 +77,10 @@ class AccountsWidget {
    * в боковой колонке
    * */
   clear() {
-
+    let widgs = document.querySelectorAll('.account');
+    for (let i = 0; i < widgs.length; i++) {
+      widgs[i].removeItem();
+    }
   }
 
   /**
@@ -59,7 +91,12 @@ class AccountsWidget {
    * Вызывает App.showPage( 'transactions', { account_id: id_счёта });
    * */
   onSelectAccount( element ) {
+    let activeElem = this.element.querySelector('.active');
+    let account_id = element.getAttribute('data-id');
 
+    element.classList.add('active');
+		activeElem.classList.remove('active');
+		App.showPage('transactions', { 'account_id': account_id });
   }
 
   /**
@@ -68,7 +105,7 @@ class AccountsWidget {
    * item - объект с данными о счёте
    * */
   getAccountHTML(item){
-
+    return '<li class="account" data-id="${item.id}"><a href="#"><span>' + item.name + '</span><span>' + item.sum + '₽</span></a></li>';
   }
 
   /**
@@ -78,6 +115,8 @@ class AccountsWidget {
    * и добавляет его внутрь элемента виджета
    * */
   renderItem(data){
-
+    let panel = document.querySelector('.accounts-panel');
+		panel.insertAdjacentHTML('beforeend', this.getAccountHTML(data));
+		this.registerEvents();
   }
 }

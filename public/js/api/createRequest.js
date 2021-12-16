@@ -4,31 +4,34 @@
  * на сервер.
  * */
 const createRequest = (options = {}, callback) => {
-    let URL = options.URL;
     const xhr = new XMLHttpRequest;
-    let formData = '';
+    let URL = options.URL;
+    let formData = new FormData;
+    xhr.responseType = 'json';
+    
 
     if (options.method == 'GET' && options.body) {
-        URL += '?mail=' + options.data.mail + '&password=' + options.data.password;
+        for (let key in options.body) {
+            URL += '?' + key + '=' + options.body.key + '&';
+        };
+        URL = URL.slice(0, -1);
     } else if (options.method != 'GET' && options.body) {
-        formData.append('mail', options.data.mail);
-        formData.append('password', options.data.password);
+        for (let key in options.body) {
+            formData.key = options.body.key;
+        };
     }
 
     try {
-        xhr.open(GET, URL);
-        xhr.send(formData);
+        xhr.open(options.method, URL);
+        if (options.data && options.data.id) {
+			const formData = new FormData();
+			form.append('id', options.data.id);
+			xhr.send(formData);
+		}
+		else xhr.send(options.data);
     }
     catch (e) {
         // перехват сетевой ошибки
-        callback(e);
-    }
-
-    xhr.responseType = 'json';
-
-    if (callback.response) {
-        console.log(response);
-    } else {
-        console.log(err);
+        options.callback(e.message);
     }
 };

@@ -6,13 +6,14 @@
 class User {
 
     static URL = '/user';
+    id = '';
   /**
    * Устанавливает текущего пользователя в
    * локальном хранилище.
    * */
   static setCurrent(user) {
-      console.log(user);
-      window.localStorage.user = JSON.stringify(user);
+    this.id = user.id;
+    localStorage.setItem(JSON.stringify(user));
   }
 
   /**
@@ -20,7 +21,7 @@ class User {
    * пользователе из локального хранилища.
    * */
     static unsetCurrent() {
-        window.localStorage.removeItem('user');
+        localStorage.removeItem(this.id);
   }
 
   /**
@@ -28,12 +29,8 @@ class User {
    * из локального хранилища
    * */
   static current() {
-      const currentUser = window.localStorage.user;
-      if (currentUser) {
-          return JSON.parse(currentUser);
-      } else {
-          return null;
-      }
+      const currentUser = localStorage.user;
+      return localStorage.getItem(currentUser);
   }
 
   /**
@@ -42,13 +39,12 @@ class User {
    * */
     static fetch(callback) {
         createRequest({
-            method = 'GET',
-            URL = this.URL + '/current',
+            method: 'GET',
+            URL: this.URL + '/current',
             responseType: 'json',
-            data,
             callback: (err, response) => {
-                if (response.succes = false) {
-                    this.unsetCurrent;
+                if (response.succes == false) {
+                    this.unsetCurrent();
                 } else {
                     this.setCurrent(response.user);
                 }
@@ -68,7 +64,7 @@ class User {
       url: this.URL + '/login',
       method: 'POST',
       responseType: 'json',
-      data,
+      body: data,
       callback: (err, response) => {
         if (response && response.user) {
           this.setCurrent(response.user);
@@ -87,11 +83,14 @@ class User {
   static register(data, callback) {
       createRequest({
           method: 'POST',
-          URL = this.URL + '/register',
-          body: data
-      }, response => {
-          this.setCurrent(response.user);
-          callback(response);
+          URL: this.URL + '/register',
+          body: data,
+          callback: (err, response) => {
+            if (response && response.success) {
+                this.setCurrent(response.user);
+            }
+            callback(err, response);
+        }
       })
   }
 
@@ -102,10 +101,13 @@ class User {
   static logout(callback) {
       createRequest({
           method: 'POST',
-          URL = this.URL + '/logout',
-      }, response => {
-          this.unsetCurrent();
-          callback(response);
-      }
+          URL: this.URL + '/logout',
+          callback: (err, response) => {
+            if (response && response.success) {
+                this.unsetCurrent();
+            }
+            callback(err, response);
+        }
+      });
   };
 }

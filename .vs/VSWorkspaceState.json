@@ -1,10 +1,12 @@
 {
   "ExpandedNodes": [
     "",
+    "\\public",
     "\\public\\js",
+    "\\public\\js\\api",
     "\\public\\js\\ui",
     "\\public\\js\\ui\\forms"
   ],
-  "SelectedNode": "\\index.js",
+  "SelectedNode": "\\public\\js\\ui\\Sidebar.js",
   "PreviewInSolutionExplorer": false
 }

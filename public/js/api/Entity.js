@@ -20,8 +20,7 @@ class Entity {
    * что наследуется от Entity)
    * */
   static create(data, callback) {
-      data.append('_method', 'PUT');
-      return createRequest({ method: 'POST', URL: this.URL, body: data }, callback );
+      return createRequest({ method: 'PUT', URL: this.URL, body: data }, callback );
   }
 
   /**
@@ -29,7 +28,6 @@ class Entity {
    * (в зависимости от того, что наследуется от Entity)
    * */
   static remove(data, callback ) {
-      data.append('_method', 'DELETE');
-      return createRequest({ method: 'POST', URL: this.URL, body: data }, callback)
+      return createRequest({ method: 'DELETE', URL: this.URL, body: data }, callback)
   }
 }
