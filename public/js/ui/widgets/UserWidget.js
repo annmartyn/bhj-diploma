@@ -15,7 +15,7 @@ class UserWidget {
     if (element) {
       this.element = element;
     } else {
-      throw(e);
+      throw new Error('No element');
     }
   }
 

@@ -39,8 +39,12 @@ class AsyncForm {
    * }
    * */
     getData() {
-        const formData = new FormData(this.element);
-        return formData;
+        let options = {};
+        let opts = Array.from(this.form);
+        for (let i = 0; i < opts.length; i++) {
+            options[opts[i].name] = opts[i].value;
+        }
+        return options;
   }
 
   onSubmit(options){

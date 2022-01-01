@@ -10,28 +10,37 @@ const createRequest = (options = {}, callback) => {
     xhr.responseType = 'json';
     
 
-    if (options.method == 'GET' && options.body) {
-        for (let key in options.body) {
-            URL += '?' + key + '=' + options.body.key + '&';
+    if (options.method == 'GET' && options.data) {
+        for (let key in options.data) {
+            URL += '?' + key + '=' + options.data.key + '&';
         };
         URL = URL.slice(0, -1);
-    } else if (options.method != 'GET' && options.body) {
-        for (let key in options.body) {
-            formData.key = options.body.key;
+    } else if (options.method != 'GET' && options.data) {
+        for (let key in options.data) {
+            formData.append(key, options.data.key);
         };
     }
 
     try {
         xhr.open(options.method, URL);
         if (options.data && options.data.id) {
-			const formData = new FormData();
-			form.append('id', options.data.id);
+			formData.append('id', options.data.id);
 			xhr.send(formData);
 		}
-		else xhr.send(options.data);
+		else {
+            xhr.send(options.data);
+        }
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === xhr.DONE) {
+                if (xhr.status != 200) {
+                    error = xhr.response.error;
+                }
+                options.callback(OverconstrainedError, xhr.response);
+            }
+        }
     }
-    catch (e) {
+    catch (error) {
         // перехват сетевой ошибки
-        options.callback(e.message);
+        options.callback(error.message);
     }
 };

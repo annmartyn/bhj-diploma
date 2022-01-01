@@ -37,14 +37,12 @@ class AccountsWidget {
     let createAcc = document.querySelector('.create-account');
     let accounts = document.querySelectorAll('.account');
     createAcc.onclick() = () => {
-      App.getModal('#modal-new-account');
+      App.getModal('createAccount').open();
     }
 
-    for (let i=0; i < accounts.length; i++) {
-      accounts[i].onclick = () => {
-        this.onSelectAccount(accounts[i]);
-      }
-    }
+    this.element.addEventListener('click', (event) => {
+      this.onSelectAccount(event.target.closest('li.account'));
+    });
   }
 
   /**

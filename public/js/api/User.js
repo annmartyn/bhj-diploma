@@ -13,7 +13,7 @@ class User {
    * */
   static setCurrent(user) {
     this.id = user.id;
-    localStorage.setItem(JSON.stringify(user));
+    localStorage.setItem('user', JSON.stringify(user));
   }
 
   /**
@@ -21,7 +21,7 @@ class User {
    * пользователе из локального хранилища.
    * */
     static unsetCurrent() {
-        localStorage.removeItem(this.id);
+        localStorage.removeItem('user');
   }
 
   /**
@@ -29,8 +29,7 @@ class User {
    * из локального хранилища
    * */
   static current() {
-      const currentUser = localStorage.user;
-      return localStorage.getItem(currentUser);
+      return JSON.parse(localStorage.getItem('user'));
   }
 
   /**
@@ -43,10 +42,10 @@ class User {
             URL: this.URL + '/current',
             responseType: 'json',
             callback: (err, response) => {
-                if (response.succes == false) {
-                    this.unsetCurrent();
+                if (response && response.succes) {
+                  this.setCurrent(response.user);
                 } else {
-                    this.setCurrent(response.user);
+                  this.unsetCurrent();                    
                 }
                 callback(err, response);
             }
@@ -64,7 +63,7 @@ class User {
       url: this.URL + '/login',
       method: 'POST',
       responseType: 'json',
-      body: data,
+      data,
       callback: (err, response) => {
         if (response && response.user) {
           this.setCurrent(response.user);
@@ -84,7 +83,7 @@ class User {
       createRequest({
           method: 'POST',
           URL: this.URL + '/register',
-          body: data,
+          data,
           callback: (err, response) => {
             if (response && response.success) {
                 this.setCurrent(response.user);
