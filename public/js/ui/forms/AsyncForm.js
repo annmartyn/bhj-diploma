@@ -40,7 +40,7 @@ class AsyncForm {
    * */
     getData() {
         let options = {};
-        let opts = Array.from(this.form);
+        let opts = Array.from(this.element);
         for (let i = 0; i < opts.length; i++) {
             options[opts[i].name] = opts[i].value;
         }

@@ -35,12 +35,11 @@ class AccountsWidget {
    * */
   registerEvents() {
     let createAcc = document.querySelector('.create-account');
-    let accounts = document.querySelectorAll('.account');
     createAcc.onclick() = () => {
       App.getModal('createAccount').open();
     }
 
-    this.element.addEventListener('click', (event) => {
+    this.elem.addEventListener('click', (event) => {
       this.onSelectAccount(event.target.closest('li.account'));
     });
   }
@@ -115,6 +114,5 @@ class AccountsWidget {
   renderItem(data){
     let panel = document.querySelector('.accounts-panel');
 		panel.insertAdjacentHTML('beforeend', this.getAccountHTML(data));
-		this.registerEvents();
   }
 }

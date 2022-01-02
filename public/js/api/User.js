@@ -85,7 +85,7 @@ class User {
           URL: this.URL + '/register',
           data,
           callback: (err, response) => {
-            if (response && response.success) {
+            if (!err && response && response.success) {
                 this.setCurrent(response.user);
             }
             callback(err, response);

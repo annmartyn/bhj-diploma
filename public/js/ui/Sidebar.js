@@ -23,7 +23,8 @@ class Sidebar {
         const toggleButton = document.getElementsByClassName('sidebar-toggle')[0];
         const bodyMenu = document.getElementsByClassName('sidebar-mini')[0];
         toggleButton.onclick = () => {
-            bodyMenu.classList.toggle('sidebar-open sidebar-collapse');
+            bodyMenu.classList.toggle('sidebar-collapse');
+            bodyMenu.classList.toggle('sidebar-open'); 
         };
   }
 
