@@ -8,7 +8,7 @@ class CreateTransactionForm extends AsyncForm {
    * метод renderAccountsList
    * */
   constructor(element) {
-    super(element)
+    super(element);
     this.renderAccountsList();
   }
 
@@ -19,13 +19,13 @@ class CreateTransactionForm extends AsyncForm {
   renderAccountsList() {
     let user = User.current();
     let option = '';
+    let select = '';
     Account.list(user, (error, response) => {
       if (response && response.data) {
-        let accs = response.data;
-        for (let i = 0; i < accs.length; i++) {
-          option += `<option value="${accs[i].id}">${accs[i].name}</option>`;
-        }
-        select = this.element.querySelector(".accounts-select");
+        response.data.forEach(acc => {
+          option += `<option value="${acc.id}">${acc.name}</option>`;
+        });
+        select = this.element.querySelector("select");
         select.innerHTML = option;
       }
     });

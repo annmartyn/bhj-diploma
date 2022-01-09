@@ -16,7 +16,7 @@ class Modal {
           throw new Error('No element!');
       }
       this.element = element;
-      this.element.registerEvents;
+      this.registerEvents();
   }
 
   /**
@@ -25,9 +25,9 @@ class Modal {
    * (с помощью метода Modal.onClose)
    * */
   registerEvents() {
-      this.diss = this.element.querySelectorAll('[data-dismiss="modal"]');
-      this.diss.onclick() = () => {
-          this.element.onClose();
+      let disses = Array.from(this.element.querySelectorAll('[data-dismiss="modal"]'));
+      for (let i = 0; i < disses.length; i++) {
+        disses[i].addEventListener('click', () => this.onClose());
       }
   }
 
@@ -36,7 +36,9 @@ class Modal {
    * Закрывает текущее окно (Modal.close())
    * */
   onClose() {
-      this.close();
+    const form = this.element.querySelector('.form');
+    form.reset();
+    this.close();
   }
   /**
    * Открывает окно: устанавливает CSS-свойство display

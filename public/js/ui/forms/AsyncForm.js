@@ -42,12 +42,14 @@ class AsyncForm {
         let options = {};
         let opts = Array.from(this.element);
         for (let i = 0; i < opts.length; i++) {
-            options[opts[i].name] = opts[i].value;
+            if (opts[i].name.length > 0) { 
+              options[opts[i].name] = opts[i].value;
+            };
         }
         return options;
   }
 
-  onSubmit(options){
+  onSubmit(options) {
 
   }
 

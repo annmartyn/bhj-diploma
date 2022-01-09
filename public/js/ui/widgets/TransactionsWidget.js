@@ -16,7 +16,7 @@ class TransactionsWidget {
       throw new Error('No element!');
     };
     this.element = element;
-    this.registerEvents;
+    this.registerEvents();
   }
   
   /**
@@ -26,13 +26,9 @@ class TransactionsWidget {
    * экземпляра окна
    * */
   registerEvents() {
-    let createInc = document.querySelector('.create-income-button');
-    let createExp = document.querySelector('.create-expense-button');
-    createInc.onclick = () => {
-      App.getModal('newIncome').open();
-    };
-    createExp.onclick = () => {
-      App.getModal('newExpense').open();
-    };
+    let incButton = this.element.querySelector('.create-income-button');
+    let expButton = this.element.querySelector('.create-expense-button');
+    incButton.addEventListener('click', () => App.getModal( 'newIncome' ).open());
+    expButton.addEventListener('click', () => App.getModal( 'newExpense' ).open());
   };
 }

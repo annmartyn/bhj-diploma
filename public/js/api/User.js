@@ -3,6 +3,7 @@
  * регистрацией пользователя из приложения
  * Имеет свойство URL, равное '/user'.
  * */
+
 class User {
 
     static URL = '/user';
@@ -43,7 +44,7 @@ class User {
             responseType: 'json',
             callback: (err, response) => {
                 if (response && response.succes) {
-                  this.setCurrent(response.user);
+                  this.setCurrent({id: response.user.id, name: response.user.name});
                 } else {
                   this.unsetCurrent();                    
                 }
@@ -60,13 +61,13 @@ class User {
    * */
   static login(data, callback) {
     createRequest({
-      url: this.URL + '/login',
+      URL: this.URL + '/login',
       method: 'POST',
       responseType: 'json',
       data,
       callback: (err, response) => {
         if (response && response.user) {
-          this.setCurrent(response.user);
+          this.setCurrent({id: response.user.id, name: response.user.name});
         }
         callback(err, response);
       }
@@ -83,10 +84,11 @@ class User {
       createRequest({
           method: 'POST',
           URL: this.URL + '/register',
+          responseType: 'json',
           data,
           callback: (err, response) => {
-            if (!err && response && response.success) {
-                this.setCurrent(response.user);
+            if (!err && response && response.user) {
+                this.setCurrent({id: response.user.id, name: response.user.name});
             }
             callback(err, response);
         }
@@ -103,9 +105,9 @@ class User {
           URL: this.URL + '/logout',
           callback: (err, response) => {
             if (response && response.success) {
-                this.unsetCurrent();
+              callback(this.unsetCurrent());
+              App.update();
             }
-            callback(err, response);
         }
       });
   };

@@ -14,7 +14,7 @@ class TransactionsPage {
    * */
   constructor( element ) {
     if (!element) {
-      throw new Error('No such element!')
+      return;
     };
     this.element = element;
     this.registerEvents();
@@ -34,16 +34,18 @@ class TransactionsPage {
    * TransactionsPage.removeAccount соответственно
    * */
   registerEvents() {
-    this.element.onclick = (error) => {
-      let accRemove = error.target.closest('.remove-account');
-      let transRemove = error.target.closest('.transaction__remove');
-      if (accRemove) {
-        this.removeAccount();
-      };
-      if (transRemove) {
-        this.removeTransaction(transRemove.dataset);
-      } 
-    };
+    this.element.addEventListener( 'click', e => {
+      const transactionButton = e.target.closest( '.transaction__remove' );
+      if ( transactionButton ) {
+        const { id } = transactionButton.dataset;
+
+        this.removeTransaction( id );
+      }
+      const accountButton = e.target.closest( '.remove-account' );
+      if ( accountButton ) {
+        this.removeAccount()
+      }
+    });
   }
 
   /**
@@ -56,13 +58,17 @@ class TransactionsPage {
    * для обновления приложения
    * */
   removeAccount() {
-    if (!this.lastOptions) {
-      throw new Error('No options!');
+    if (this.lastOptions) {
+      console.log(this.lastOptions);
+      Account.get(this.lastOptions.account_id, data => {
+        if (confirm(`Вы действительно хотите удалить счет ${data.name}?`)) {
+          Account.remove(data);
+          App.update();
+          App.updateWidgets();
+        };
+      });
     };
-    if (confirm('Вы действительно хотите удалить счёт?')) {
-      Account.remove( this.lastOptions.account_id, () => App.update());
-    };
-  }
+  };
 
   /**
    * Удаляет транзакцию (доход или расход). Требует
@@ -71,10 +77,16 @@ class TransactionsPage {
    * либо обновляйте текущую страницу (метод update) и виджет со счетами
    * */
   removeTransaction(id) {
-    if (confirm('Вы действительно хотите удалить эту транзакцию?')) {
-      Transaction.remove( id, () => App.update());
+    if (confirm("Вы действительно хотите удалить эту транзакцию?")) {
+      Transaction.remove({id: id}, (err, response) => {
+        if (!err) {
+          App.update();
+        } else {
+          alert(err);
+        }
+      });
     };
-  }
+  };
 
   /**
    * С помощью Account.get() получает название счёта и отображает
@@ -84,18 +96,15 @@ class TransactionsPage {
    * */
   render(options) {
     if (!options) {
-      throw new Error('No options!')
+      return;
     }
     this.lastOptions = options;
-    Account.get(options.account_id, (error, response) => {
-      if (response && response.success) {
-        this.renderTitle( response.data.name );
-      };
-    });
-    Transaction.list(options, (error, response) => {
-      if (response && response.success) {
-        this.renderTitle( response.data.name );
-      };
+    Account.get(options.account_id, item => {
+      this.renderTitle(item.name);
+      Transaction.list(options, (err, response) => {
+        this.clear();
+        if (!err) this.renderTransactions(response.data);
+      })
     });
   }
 
@@ -106,17 +115,14 @@ class TransactionsPage {
    * */
   clear() {
     this.renderTransactions([]);
-    this.renderTitle('Название счёта');
-    this.lastOptions = '';
   }
 
   /**
    * Устанавливает заголовок в элемент .content-title
    * */
   renderTitle(name) {
-    let title = this.element.querySelector('.content-title');
-    title.textContent = name;
-  }
+    this.element.querySelector('.content-title').innerHTML = name;
+  };
 
   /**
    * Форматирует дату в формате 2019-03-10 03:20:41 (строка)
