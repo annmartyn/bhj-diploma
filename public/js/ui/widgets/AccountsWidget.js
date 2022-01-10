@@ -101,10 +101,10 @@ class AccountsWidget {
    * */
   getAccountHTML(item){
     let active = ' ';
-    if (this.currentID = item.id) {
+    if (this.currentID === item.id) {
       active += 'active';
     }
-    return '<li class="account' + active +'" data-id=' + item.id + '><a href="#"><span>' + item.name + '</span><span>' + item.sum + '₽</span></a></li>';
+    return '<li class="account' + active +'" data-id=' + item.id + '><a href="#"><span>' + item.name + ' </span><span>' + item.sum + '₽</span></a></li>';
   }
 
   /**
